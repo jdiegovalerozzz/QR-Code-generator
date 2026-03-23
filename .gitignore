@@ -1,0 +1,23 @@
+# Deps
+node_modules/
+.astro/
+dist/
+
+# Envs
+.env
+.env.production
+.env.local
+.env.example
+
+# Logs - Debug
+npm-debug.log*
+logs/
+*.log
+
+# OS
+.DS_Store
+.vscode/
+Thumbs.db
+
+# Docker
+docker-compose.override.yml

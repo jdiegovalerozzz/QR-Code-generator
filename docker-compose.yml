@@ -1,20 +1,28 @@
 services:
   backend:
     build: ./back
-    ports:
-      - "3001:3001"
+    # ports:
+    #   - "3001:3001" 
     environment:
       - PORT=3001
       - NODE_ENV=production
     restart: always
 
   frontend:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./front/dist:/usr/share/nginx/html
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    build:
+      context: ./front
+      args:
+        PUBLIC_API_URL: "https://api.jejamel.me"
     restart: always
     depends_on:
-      - backend # Indica que el front depende de que el back esté arriba
+      - backend
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    restart: always
+    depends_on:
+      - frontend
+      - backend
